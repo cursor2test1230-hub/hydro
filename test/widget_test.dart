@@ -5,27 +5,31 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:water_dashboard/main.dart';
 
 void main() {
-  testWidgets('Dashboard renders key sections', (tester) async {
+  testWidgets('Dashboard renders key sections and toggles details', (tester) async {
     await tester.pumpWidget(const MyApp());
 
     expect(find.text('Hydro Monitor'), findsOneWidget);
     expect(find.text('Overview'), findsOneWidget);
     expect(find.text('Results'), findsOneWidget);
 
-    // Three boxes labels
-    expect(find.text('Water'), findsOneWidget);
-    expect(find.text('Nutrients'), findsOneWidget);
-    expect(find.text('pH'), findsOneWidget);
-
-    // Result rows labels
+    // Initial selected should be Water
     expect(find.text('Water level'), findsOneWidget);
+    expect(find.text('72%'), findsOneWidget);
+
+    // Tap Nutrients
+    await tester.tap(find.text('Nutrients'));
+    await tester.pumpAndSettle();
     expect(find.text('Nutrients level'), findsOneWidget);
+    expect(find.text('480 ppm'), findsOneWidget);
+
+    // Tap pH
+    await tester.tap(find.text('pH'));
+    await tester.pumpAndSettle();
     expect(find.text('pH level'), findsOneWidget);
+    expect(find.text('6.5'), findsOneWidget);
   });
 }
