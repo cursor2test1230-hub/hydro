@@ -180,7 +180,16 @@ class _NavPillButtonState extends State<NavPillButton> {
     Widget content = GlassPill(
       tint: tint,
       pressed: _pressed,
-      child: Icon(widget.icon, color: Colors.white, size: 24),
+      child: const SizedBox.shrink(),
+    );
+
+    // Place glossy icon on top of pill content
+    content = Stack(
+      alignment: Alignment.center,
+      children: [
+        content,
+        GlossyIcon(icon: widget.icon, size: 24, color: Colors.white),
+      ],
     );
 
     content = Material(
@@ -309,11 +318,59 @@ class GlassCircle extends StatelessWidget {
                   ),
                 ),
               ),
-              child,
+              // Glossy outer+inner glow icon
+              GlossyIcon(icon: (child as Icon).icon!, size: (child as Icon).size ?? 28, color: (child as Icon).color ?? Colors.white),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class GlossyIcon extends StatelessWidget {
+  final IconData icon;
+  final double size;
+  final Color color;
+  const GlossyIcon({super.key, required this.icon, required this.size, this.color = Colors.white});
+
+  @override
+  Widget build(BuildContext context) {
+    final double glowSize = size * 1.1;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Outer glow
+        IgnorePointer(
+          child: Container(
+            width: glowSize,
+            height: glowSize,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: Color(0x66FFFFFF), blurRadius: 10, spreadRadius: 2),
+                BoxShadow(color: Color(0x33FFFFFF), blurRadius: 20, spreadRadius: 6),
+              ],
+            ),
+          ),
+        ),
+        // Icon
+        Icon(icon, size: size, color: color),
+        // Inner glow highlight
+        IgnorePointer(
+          child: Container(
+            width: glowSize,
+            height: glowSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [Colors.white.withValues(alpha: 0.22), Colors.transparent],
+                stops: const [0.0, 1.0],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
