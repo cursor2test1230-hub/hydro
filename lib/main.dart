@@ -226,10 +226,7 @@ class GlassPill extends StatelessWidget {
               colors: [Colors.transparent, Colors.transparent],
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
-            boxShadow: [
-              BoxShadow(color: Colors.white.withValues(alpha: 0.10), offset: const Offset(-2, -2), blurRadius: 8),
-              BoxShadow(color: Colors.black.withValues(alpha: 0.20), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
-            ],
+            // Shadows removed for bottom navigation icon buttons
           ),
           alignment: Alignment.center,
           child: child,
