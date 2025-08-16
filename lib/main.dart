@@ -73,21 +73,17 @@ class _RootScaffoldState extends State<RootScaffold> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: _selectedIndex == 0 ? scheme.primary : scheme.onSurfaceVariant,
-                ),
-                onPressed: () => setState(() => _selectedIndex = 0),
+              NavPillButton(
+                icon: Icons.home,
+                selected: _selectedIndex == 0,
+                onTap: () => setState(() => _selectedIndex = 0),
                 tooltip: 'Home',
               ),
               const SizedBox(width: 24),
-              IconButton(
-                icon: Icon(
-                  Icons.bar_chart,
-                  color: _selectedIndex == 2 ? scheme.primary : scheme.onSurfaceVariant,
-                ),
-                onPressed: () => setState(() => _selectedIndex = 2),
+              NavPillButton(
+                icon: Icons.bar_chart,
+                selected: _selectedIndex == 2,
+                onTap: () => setState(() => _selectedIndex = 2),
                 tooltip: 'Insights',
               ),
             ],
@@ -95,6 +91,66 @@ class _RootScaffoldState extends State<RootScaffold> {
         ),
       ),
     );
+  }
+}
+
+class NavPillButton extends StatelessWidget {
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+  final String? tooltip;
+
+  const NavPillButton({
+    super.key,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    final Color backgroundColor = selected
+        ? scheme.primaryContainer
+        : scheme.surfaceContainerHighest;
+    final Color borderColor = selected ? Colors.transparent : scheme.outlineVariant;
+    final Color iconColor = selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant;
+
+    Widget content = Container(
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor),
+        boxShadow: selected
+            ? [
+                BoxShadow(
+                  color: scheme.primary.withValues(alpha: 0.16),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ]
+            : null,
+      ),
+      child: Icon(icon, color: iconColor, size: 24),
+    );
+
+    content = Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: content,
+      ),
+    );
+
+    if (tooltip != null) {
+      content = Tooltip(message: tooltip!, child: content);
+    }
+
+    return content;
   }
 }
 
