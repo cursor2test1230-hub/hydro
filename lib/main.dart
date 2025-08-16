@@ -180,16 +180,7 @@ class _NavPillButtonState extends State<NavPillButton> {
     Widget content = GlassPill(
       tint: tint,
       pressed: _pressed,
-      child: const SizedBox.shrink(),
-    );
-
-    // Place glossy icon on top of pill content
-    content = Stack(
-      alignment: Alignment.center,
-      children: [
-        content,
-        GlossyIcon(icon: widget.icon, size: 24, color: Colors.white),
-      ],
+      child: Icon(widget.icon, size: 24, color: Colors.white),
     );
 
     content = Material(
@@ -266,11 +257,11 @@ class GlassCircle extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                tint.withValues(alpha: 0.60),
-                tint.withValues(alpha: 0.40),
+                tint.withValues(alpha: 0.28),
+                tint.withValues(alpha: 0.16),
               ],
             ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.38), width: 1.4),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.32), width: 1.3),
             boxShadow: const [
               // Symmetric highlight/shadow for a perfect circular 3D look
               BoxShadow(color: Color(0x33FFFFFF), offset: Offset(-3, -3), blurRadius: 14, spreadRadius: 1),
@@ -280,7 +271,7 @@ class GlassCircle extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Warm inner radial glow for joyful green
+              // Warm inner radial glow for joyful green (light)
               Positioned.fill(
                 child: IgnorePointer(
                   child: Container(
@@ -289,7 +280,7 @@ class GlassCircle extends StatelessWidget {
                         center: const Alignment(0.0, -0.05),
                         radius: 0.65,
                         colors: [
-                          const Color(0xFFA3E635).withValues(alpha: 0.28),
+                          const Color(0xFFA3E635).withValues(alpha: 0.16),
                           Colors.transparent,
                         ],
                         stops: const [0.0, 1.0],
@@ -320,8 +311,7 @@ class GlassCircle extends StatelessWidget {
                   ),
                 ),
               ),
-              // Glossy outer+inner glow icon
-              GlossyIcon(icon: (child as Icon).icon!, size: (child as Icon).size ?? 28, color: (child as Icon).color ?? Colors.white),
+              child,
             ],
           ),
         ),
