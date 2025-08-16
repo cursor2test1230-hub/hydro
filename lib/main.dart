@@ -49,33 +49,30 @@ class _RootScaffoldState extends State<RootScaffold> {
         index: _selectedIndex,
         children: _pages,
       ),
-      floatingActionButton: PressScale(
-        pressedScale: 0.94,
-        child: SizedBox(
-          width: 72,
-          height: 72,
-          child: FloatingActionButton(
-            heroTag: 'fab-plants',
-            shape: const CircleBorder(),
-            backgroundColor: const Color(0xFF57CC99),
-            foregroundColor: Colors.white,
-            elevation: 14,
-            focusElevation: 18,
-            hoverElevation: 18,
-            highlightElevation: 18,
-            onPressed: () => setState(() => _selectedIndex = 1),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+      floatingActionButton: SizedBox(
+        width: 72,
+        height: 72,
+        child: FloatingActionButton(
+          heroTag: 'fab-plants',
+          shape: const CircleBorder(),
+          backgroundColor: const Color(0xFF57CC99),
+          foregroundColor: Colors.white,
+          elevation: 14,
+          focusElevation: 18,
+          hoverElevation: 18,
+          highlightElevation: 18,
+          onPressed: () => setState(() => _selectedIndex = 1),
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: const Center(
-                child: Icon(Icons.eco, size: 32),
-              ),
+            ),
+            child: const Center(
+              child: Icon(Icons.eco, size: 32),
             ),
           ),
         ),
@@ -159,9 +156,7 @@ class _NavPillButtonState extends State<NavPillButton> {
       ),
     ];
 
-    Widget content = AnimatedContainer(
-      duration: const Duration(milliseconds: 160),
-      curve: Curves.easeOut,
+    Widget base = Container(
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -183,6 +178,38 @@ class _NavPillButtonState extends State<NavPillButton> {
       child: Icon(widget.icon, color: iconColor, size: 24),
     );
 
+    // Subtle inner highlight to mimic specular reflection on press
+    final Widget innerHighlight = AnimatedOpacity(
+      opacity: _pressed ? 0.16 : 0.0,
+      duration: const Duration(milliseconds: 90),
+      curve: Curves.easeOut,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.7),
+              Colors.transparent,
+            ],
+            stops: const [0.0, 0.6],
+          ),
+        ),
+      ),
+    );
+
+    Widget content = ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          base,
+          Positioned.fill(child: IgnorePointer(child: innerHighlight)),
+        ],
+      ),
+    );
+
     content = Material(
       color: Colors.transparent,
       child: InkWell(
@@ -197,51 +224,7 @@ class _NavPillButtonState extends State<NavPillButton> {
       content = Tooltip(message: widget.tooltip!, child: content);
     }
 
-    return AnimatedSlide(
-      offset: selected ? const Offset(0, -0.02) : Offset.zero,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-      child: AnimatedScale(
-        scale: _pressed ? 0.96 : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
-        child: content,
-      ),
-    );
-  }
-}
-
-class PressScale extends StatefulWidget {
-  final Widget child;
-  final double pressedScale;
-  final Duration duration;
-
-  const PressScale({super.key, required this.child, this.pressedScale = 0.95, this.duration = const Duration(milliseconds: 140)});
-
-  @override
-  State<PressScale> createState() => _PressScaleState();
-}
-
-class _PressScaleState extends State<PressScale> {
-  bool _pressed = false;
-
-  void _setPressed(bool v) {
-    if (_pressed != v) setState(() => _pressed = v);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (_) => _setPressed(true),
-      onPointerUp: (_) => _setPressed(false),
-      onPointerCancel: (_) => _setPressed(false),
-      child: AnimatedScale(
-        scale: _pressed ? widget.pressedScale : 1.0,
-        duration: widget.duration,
-        curve: Curves.easeOut,
-        child: widget.child,
-      ),
-    );
+    return content;
   }
 }
 
