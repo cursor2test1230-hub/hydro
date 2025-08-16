@@ -98,24 +98,7 @@ class _RootScaffoldState extends State<RootScaffold> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 72,
-        height: 72,
-        child: FloatingActionButton(
-          heroTag: 'fab-plants',
-          shape: const CircleBorder(),
-          backgroundColor: Colors.transparent,
-          splashColor: scheme.primary.withValues(alpha: 0.25),
-          elevation: 12,
-          highlightElevation: 16,
-          onPressed: () => setState(() => _selectedIndex = 1),
-          child: GlassCircle(
-            tint: const Color(0xFF4ADE80),
-            child: const Icon(Icons.eco, size: 32, color: Colors.white),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
@@ -125,7 +108,7 @@ class _RootScaffoldState extends State<RootScaffold> {
         child: SizedBox(
           height: 64,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               NavPillButton(
                 icon: Icons.home,
@@ -133,7 +116,12 @@ class _RootScaffoldState extends State<RootScaffold> {
                 onTap: () => setState(() => _selectedIndex = 0),
                 tooltip: 'Home',
               ),
-              const SizedBox(width: 24),
+              NavPillButton(
+                icon: Icons.eco,
+                selected: _selectedIndex == 1,
+                onTap: () => setState(() => _selectedIndex = 1),
+                tooltip: 'Plants',
+              ),
               NavPillButton(
                 icon: Icons.bar_chart,
                 selected: _selectedIndex == 2,
@@ -175,7 +163,14 @@ class _NavPillButtonState extends State<NavPillButton> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final bool selected = widget.selected;
-    final Color tint = selected ? scheme.primary : scheme.onSurface;
+    
+    // Custom tint color for plant icon when selected
+    Color tint;
+    if (widget.icon == Icons.eco && selected) {
+      tint = const Color(0xFF4ADE80); // Green color for plants
+    } else {
+      tint = selected ? scheme.primary : scheme.onSurface;
+    }
 
     Widget content = GlassPill(
       tint: tint,
@@ -226,7 +221,10 @@ class GlassPill extends StatelessWidget {
               colors: [Colors.transparent, Colors.transparent],
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
-            // Shadows removed for bottom navigation icon buttons
+            boxShadow: [
+              BoxShadow(color: Colors.white.withValues(alpha: 0.10), offset: const Offset(-2, -2), blurRadius: 8),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.20), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
+            ],
           ),
           alignment: Alignment.center,
           child: child,
