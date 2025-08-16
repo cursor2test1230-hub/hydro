@@ -46,9 +46,23 @@ class _RootScaffoldState extends State<RootScaffold> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+      body: Stack(
+        children: [
+          // Mint/leaf green gradient background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFA8E6CF), Color(0xFF57CC99)],
+              ),
+            ),
+          ),
+          IndexedStack(
+            index: _selectedIndex,
+            children: _pages,
+          ),
+        ],
       ),
       floatingActionButton: SizedBox(
         width: 72,
@@ -385,6 +399,7 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
       ),
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -797,6 +812,7 @@ class PlantsPage extends StatelessWidget {
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
       ),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -842,6 +858,7 @@ class InsightsPage extends StatelessWidget {
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
       ),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(20),
