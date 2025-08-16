@@ -48,13 +48,45 @@ class _RootScaffoldState extends State<RootScaffold> {
     return Scaffold(
       body: Stack(
         children: [
-          // Mint/leaf green gradient background
+          // Richer green background with subtle glows
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFA8E6CF), Color(0xFF57CC99)],
+                colors: [Color(0xFFE9FFF4), Color(0xFFBFF3D8), Color(0xFF77D9AA)],
+                stops: [0.0, 0.5, 1.0],
+              ),
+            ),
+          ),
+          // Soft radial glows for depth (not animations)
+          Positioned(
+            top: -60,
+            left: -40,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [Colors.white.withValues(alpha: 0.22), Colors.transparent],
+                  stops: const [0.0, 1.0],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -80,
+            right: -60,
+            child: Container(
+              width: 260,
+              height: 260,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [const Color(0xFF57CC99).withValues(alpha: 0.24), Colors.transparent],
+                  stops: const [0.0, 1.0],
+                ),
               ),
             ),
           ),
@@ -184,7 +216,7 @@ class GlassPill extends StatelessWidget {
           height: 44,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            // make background transparent to emphasize glass look
+            // transparent fill to emphasize glass; no inner shine overlays
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -192,51 +224,12 @@ class GlassPill extends StatelessWidget {
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
             boxShadow: [
-              BoxShadow(color: Colors.white.withValues(alpha: 0.12), offset: const Offset(-2, -2), blurRadius: 8),
-              BoxShadow(color: Colors.black.withValues(alpha: 0.18), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
+              BoxShadow(color: Colors.white.withValues(alpha: 0.10), offset: const Offset(-2, -2), blurRadius: 8),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.20), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
             ],
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              child,
-              // Persistent top gloss
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0x33FFFFFF), Color(0x14FFFFFF), Colors.transparent],
-                        stops: [0.0, 0.45, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              // Quick specular burst on press
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: AnimatedOpacity(
-                    opacity: pressed ? 0.16 : 0.0,
-                    duration: const Duration(milliseconds: 90),
-                    curve: Curves.easeOut,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Colors.white.withValues(alpha: 0.55), Colors.transparent],
-                          stops: const [0.0, 0.6],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          alignment: Alignment.center,
+          child: child,
         ),
       ),
     );
