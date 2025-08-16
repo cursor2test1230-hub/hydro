@@ -250,105 +250,24 @@ class GlassCircle extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
+            // Clean transparent fill like GlassPill for glossy effect
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                tint.withValues(alpha: 0.28),
-                tint.withValues(alpha: 0.16),
-              ],
+              colors: [Colors.transparent, Colors.transparent],
             ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.32), width: 1.3),
-            // Shadows removed for plant icon
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Enhanced inner radial glow for plant icon
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: const Alignment(0.0, -0.05),
-                        radius: 0.75,
-                        colors: [
-                          const Color(0xFFA3E635).withValues(alpha: 0.25),
-                          const Color(0xFF4ADE80).withValues(alpha: 0.15),
-                          Colors.transparent,
-                        ],
-                        stops: const [0.0, 0.6, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
+            // Subtle shadow for depth
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-              // Enhanced top gloss arc with more shine
-              Positioned(
-                top: 6,
-                left: 8,
-                right: 8,
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.45),
-                        Colors.white.withValues(alpha: 0.25),
-                        Colors.white.withValues(alpha: 0.08),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.0, 0.3, 0.7, 1.0],
-                    ),
-                  ),
-                ),
-              ),
-              // Additional side shine for 3D effect
-              Positioned(
-                top: 12,
-                left: 6,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.4),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // Bottom highlight for depth
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.2),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              child,
             ],
           ),
+          alignment: Alignment.center,
+          child: child,
         ),
       ),
     );
