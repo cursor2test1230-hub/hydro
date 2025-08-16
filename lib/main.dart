@@ -66,29 +66,71 @@ class _RootScaffoldState extends State<RootScaffold> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        clipBehavior: Clip.antiAlias,
+        elevation: 8,
         color: scheme.surfaceContainerHigh,
-        child: SizedBox(
+        surfaceTintColor: Colors.transparent,
+        child: Container(
           height: 64,
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: scheme.outlineVariant, width: 1),
+            ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: _selectedIndex == 0 ? scheme.primary : scheme.onSurfaceVariant,
-                ),
-                onPressed: () => setState(() => _selectedIndex = 0),
-                tooltip: 'Home',
+              // Home icon (left of center)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      color: _selectedIndex == 0 ? scheme.primary : scheme.onSurfaceVariant,
+                    ),
+                    onPressed: () => setState(() => _selectedIndex = 0),
+                    tooltip: 'Home',
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: _selectedIndex == 0 ? scheme.primary : Colors.transparent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 24),
-              IconButton(
-                icon: Icon(
-                  Icons.bar_chart,
-                  color: _selectedIndex == 2 ? scheme.primary : scheme.onSurfaceVariant,
-                ),
-                onPressed: () => setState(() => _selectedIndex = 2),
-                tooltip: 'Insights',
+
+              // Gap for the FAB notch
+              const SizedBox(width: 96),
+
+              // Insights icon (right of center)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.bar_chart,
+                      color: _selectedIndex == 2 ? scheme.primary : scheme.onSurfaceVariant,
+                    ),
+                    onPressed: () => setState(() => _selectedIndex = 2),
+                    tooltip: 'Insights',
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: _selectedIndex == 2 ? scheme.primary : Colors.transparent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
