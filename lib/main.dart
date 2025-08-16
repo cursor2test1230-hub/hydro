@@ -57,9 +57,24 @@ class _RootScaffoldState extends State<RootScaffold> {
           shape: const CircleBorder(),
           backgroundColor: const Color(0xFF57CC99),
           foregroundColor: Colors.white,
-          elevation: 6,
+          elevation: 14,
+          focusElevation: 18,
+          hoverElevation: 18,
+          highlightElevation: 18,
           onPressed: () => setState(() => _selectedIndex = 1),
-          child: const Icon(Icons.eco, size: 32),
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: const Center(
+              child: Icon(Icons.eco, size: 32),
+            ),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -68,6 +83,9 @@ class _RootScaffoldState extends State<RootScaffold> {
         notchMargin: 10,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         color: scheme.surfaceContainerHigh,
+        elevation: 12,
+        surfaceTintColor: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
         child: SizedBox(
           height: 64,
           child: Row(
@@ -117,22 +135,37 @@ class NavPillButton extends StatelessWidget {
     final Color borderColor = selected ? Colors.transparent : scheme.outlineVariant;
     final Color iconColor = selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant;
 
+    final List<BoxShadow> shadows = [
+      BoxShadow(
+        color: Colors.white.withValues(alpha: selected ? 0.45 : 0.18),
+        offset: const Offset(-2, -2),
+        blurRadius: selected ? 8 : 6,
+      ),
+      BoxShadow(
+        color: Colors.black.withValues(alpha: selected ? 0.28 : 0.12),
+        offset: const Offset(3, 4),
+        blurRadius: selected ? 14 : 10,
+      ),
+    ];
+
     Widget content = Container(
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        gradient: selected
+            ? LinearGradient(
+                colors: [
+                  scheme.primaryContainer.withValues(alpha: 1),
+                  scheme.primaryContainer.withValues(alpha: 0.9),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        color: selected ? null : backgroundColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: borderColor),
-        boxShadow: selected
-            ? [
-                BoxShadow(
-                  color: scheme.primary.withValues(alpha: 0.16),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ]
-            : null,
+        boxShadow: shadows,
       ),
       child: Icon(icon, color: iconColor, size: 24),
     );
