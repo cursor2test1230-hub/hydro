@@ -46,19 +46,8 @@ class _RootScaffoldState extends State<RootScaffold> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
+      extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text(
-          'Hydro Monitor',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-      ),
       body: Stack(
         children: [
           // Richer green background with subtle glows
