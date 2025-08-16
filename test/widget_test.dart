@@ -13,22 +13,22 @@ void main() {
   testWidgets('FAB navigates to Plants and bottom app bar switches tabs', (tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Starts on Home (Dashboard)
-    expect(find.widgetWithText(AppBar, 'Hydro Monitor'), findsOneWidget);
+    // Starts on Home (Dashboard) - check a unique body label
+    expect(find.text('Overview'), findsOneWidget);
 
     // Tap the floating Plants button
     await tester.tap(find.byIcon(Icons.eco));
     await tester.pumpAndSettle();
-    expect(find.widgetWithText(AppBar, 'Plants'), findsOneWidget);
+    expect(find.text('Your plants overview'), findsOneWidget);
 
     // Tap Insights icon in bottom app bar
     await tester.tap(find.byIcon(Icons.bar_chart));
     await tester.pumpAndSettle();
-    expect(find.widgetWithText(AppBar, 'Insights'), findsOneWidget);
+    expect(find.text('Analytics & trends'), findsOneWidget);
 
     // Tap Home icon in bottom app bar
     await tester.tap(find.byIcon(Icons.home));
     await tester.pumpAndSettle();
-    expect(find.widgetWithText(AppBar, 'Hydro Monitor'), findsOneWidget);
+    expect(find.text('Overview'), findsOneWidget);
   });
 }

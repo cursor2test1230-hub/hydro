@@ -46,6 +46,19 @@ class _RootScaffoldState extends State<RootScaffold> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Hydro Monitor',
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: Stack(
         children: [
           // Richer green background with subtle glows
@@ -396,10 +409,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
     final MetricConfig selectedConfig = configFor(selected);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
           'Hydro Monitor',
@@ -407,8 +420,10 @@ class _DashboardPageState extends State<DashboardPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: scheme.surface,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       backgroundColor: Colors.transparent,
       body: SafeArea(
@@ -814,19 +829,22 @@ class ResultTile extends StatelessWidget {
 class PlantsPage extends StatelessWidget {
   const PlantsPage({super.key});
 
-  @override
+    @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-        backgroundColor: scheme.surface,
-        surfaceTintColor: Colors.transparent,
-      ),
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20),
+       extendBodyBehindAppBar: true,
+       appBar: AppBar(
+         title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+         backgroundColor: Colors.transparent,
+         surfaceTintColor: Colors.transparent,
+         elevation: 0,
+         scrolledUnderElevation: 0,
+       ),
+       backgroundColor: Colors.transparent,
+       body: Center(
+         child: Container(
+           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF80ED99), Color(0xFF57CC99)],
@@ -864,10 +882,13 @@ class InsightsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-        backgroundColor: scheme.surface,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       backgroundColor: Colors.transparent,
       body: Center(
