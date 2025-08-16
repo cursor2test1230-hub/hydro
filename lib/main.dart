@@ -264,42 +264,84 @@ class GlassCircle extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Warm inner radial glow for joyful green (light)
+              // Enhanced inner radial glow for plant icon
               Positioned.fill(
                 child: IgnorePointer(
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
                         center: const Alignment(0.0, -0.05),
-                        radius: 0.65,
+                        radius: 0.75,
                         colors: [
-                          const Color(0xFFA3E635).withValues(alpha: 0.16),
+                          const Color(0xFFA3E635).withValues(alpha: 0.25),
+                          const Color(0xFF4ADE80).withValues(alpha: 0.15),
                           Colors.transparent,
                         ],
-                        stops: const [0.0, 1.0],
+                        stops: const [0.0, 0.6, 1.0],
                       ),
                     ),
                   ),
                 ),
               ),
-              // Top gloss arc
+              // Enhanced top gloss arc with more shine
               Positioned(
-                top: 8,
-                left: 10,
-                right: 10,
+                top: 6,
+                left: 8,
+                right: 8,
                 child: Container(
-                  height: 26,
+                  height: 30,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
+                    borderRadius: BorderRadius.circular(30),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.white.withValues(alpha: 0.35),
-                        Colors.white.withValues(alpha: 0.06),
+                        Colors.white.withValues(alpha: 0.45),
+                        Colors.white.withValues(alpha: 0.25),
+                        Colors.white.withValues(alpha: 0.08),
                         Colors.transparent,
                       ],
-                      stops: const [0.0, 0.5, 1.0],
+                      stops: const [0.0, 0.3, 0.7, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+              // Additional side shine for 3D effect
+              Positioned(
+                top: 12,
+                left: 6,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.4),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Bottom highlight for depth
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.2),
+                        Colors.transparent,
+                      ],
                     ),
                   ),
                 ),
