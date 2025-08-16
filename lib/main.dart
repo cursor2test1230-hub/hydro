@@ -262,11 +262,7 @@ class GlassCircle extends StatelessWidget {
               ],
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.32), width: 1.3),
-            boxShadow: const [
-              // Symmetric highlight/shadow for a perfect circular 3D look
-              BoxShadow(color: Color(0x33FFFFFF), offset: Offset(-3, -3), blurRadius: 14, spreadRadius: 1),
-              BoxShadow(color: Color(0x33000000), offset: Offset(6, 6), blurRadius: 20, spreadRadius: 2),
-            ],
+            // Shadows removed for plant icon
           ),
           child: Stack(
             alignment: Alignment.center,
