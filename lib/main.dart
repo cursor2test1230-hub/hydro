@@ -108,7 +108,7 @@ class _RootScaffoldState extends State<RootScaffold> {
           highlightElevation: 16,
           onPressed: () => setState(() => _selectedIndex = 1),
           child: GlassCircle(
-            tint: const Color(0xFF57CC99),
+            tint: const Color(0xFF4ADE80),
             child: const Icon(Icons.eco, size: 32, color: Colors.white),
           ),
         ),
@@ -254,8 +254,8 @@ class GlassCircle extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                tint.withValues(alpha: 0.28),
-                tint.withValues(alpha: 0.18),
+                tint.withValues(alpha: 0.35),
+                tint.withValues(alpha: 0.20),
               ],
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.28), width: 1.2),
@@ -267,6 +267,24 @@ class GlassCircle extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
+              // Warm inner radial glow for joyful green
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: const Alignment(0.0, -0.05),
+                        radius: 0.65,
+                        colors: [
+                          const Color(0xFFA3E635).withValues(alpha: 0.28),
+                          Colors.transparent,
+                        ],
+                        stops: const [0.0, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               // Top gloss arc
               Positioned(
                 top: 8,
