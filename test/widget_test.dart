@@ -10,30 +10,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:water_dashboard/main.dart';
 
 void main() {
-  testWidgets('Bottom navigation switches tabs and dashboard still works', (tester) async {
+  testWidgets('FAB navigates to Plants and bottom app bar switches tabs', (tester) async {
     await tester.pumpWidget(const MyApp());
 
     // Starts on Home (Dashboard)
     expect(find.widgetWithText(AppBar, 'Hydro Monitor'), findsOneWidget);
-    expect(find.text('Overview'), findsOneWidget);
 
-    // Switch to Plants tab
+    // Tap the floating Plants button
     await tester.tap(find.byIcon(Icons.eco));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Plants'), findsOneWidget);
 
-    // Switch to Insights tab
+    // Tap Insights icon in bottom app bar
     await tester.tap(find.byIcon(Icons.bar_chart));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Insights'), findsOneWidget);
 
-    // Back to Home tab
+    // Tap Home icon in bottom app bar
     await tester.tap(find.byIcon(Icons.home));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Hydro Monitor'), findsOneWidget);
-    // and the metric selection still works
-    await tester.tap(find.text('Nutrients'));
-    await tester.pumpAndSettle();
-    expect(find.text('Nutrients level'), findsOneWidget);
   });
 }

@@ -49,16 +49,50 @@ class _RootScaffoldState extends State<RootScaffold> {
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
-        indicatorColor: scheme.primaryContainer,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.eco), label: 'Plants'),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Insights'),
-        ],
+      floatingActionButton: SizedBox(
+        width: 72,
+        height: 72,
+        child: FloatingActionButton(
+          heroTag: 'fab-plants',
+          shape: const CircleBorder(),
+          backgroundColor: const Color(0xFF57CC99),
+          foregroundColor: Colors.white,
+          elevation: 6,
+          onPressed: () => setState(() => _selectedIndex = 1),
+          child: const Icon(Icons.eco, size: 32),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        color: scheme.surfaceContainerHigh,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.home,
+                  color: _selectedIndex == 0 ? scheme.primary : scheme.onSurfaceVariant,
+                ),
+                onPressed: () => setState(() => _selectedIndex = 0),
+                tooltip: 'Home',
+              ),
+              const SizedBox(width: 24),
+              IconButton(
+                icon: Icon(
+                  Icons.bar_chart,
+                  color: _selectedIndex == 2 ? scheme.primary : scheme.onSurfaceVariant,
+                ),
+                onPressed: () => setState(() => _selectedIndex = 2),
+                tooltip: 'Insights',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
