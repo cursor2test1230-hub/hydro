@@ -19,8 +19,47 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
         scaffoldBackgroundColor: colorScheme.surface,
       ),
-      home: const DashboardPage(),
+      home: const RootScaffold(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class RootScaffold extends StatefulWidget {
+  const RootScaffold({super.key});
+
+  @override
+  State<RootScaffold> createState() => _RootScaffoldState();
+}
+
+class _RootScaffoldState extends State<RootScaffold> {
+  int _selectedIndex = 0;
+
+  List<Widget> get _pages => const [
+        DashboardPage(),
+        PlantsPage(),
+        InsightsPage(),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+        indicatorColor: scheme.primaryContainer,
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.eco), label: 'Plants'),
+          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Insights'),
+        ],
+      ),
     );
   }
 }
@@ -514,6 +553,96 @@ class ResultTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class PlantsPage extends StatelessWidget {
+  const PlantsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF80ED99), Color(0xFF57CC99)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: scheme.primary.withValues(alpha: 0.12),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.eco, color: Colors.white, size: 48),
+              const SizedBox(height: 10),
+              Text('Your plants overview', style: GoogleFonts.inter(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Coming soon', style: GoogleFonts.inter(color: Colors.white.withValues(alpha: 0.9))),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class InsightsPage extends StatelessWidget {
+  const InsightsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF9775FA), Color(0xFF5C7CFA)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: scheme.primary.withValues(alpha: 0.12),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.bar_chart, color: Colors.white, size: 48),
+              const SizedBox(height: 10),
+              Text('Analytics & trends', style: GoogleFonts.inter(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Coming soon', style: GoogleFonts.inter(color: Colors.white.withValues(alpha: 0.9))),
+            ],
+          ),
+        ),
       ),
     );
   }
