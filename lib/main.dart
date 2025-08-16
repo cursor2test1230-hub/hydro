@@ -224,8 +224,9 @@ class GlassPill extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
         child: Container(
-          height: 44,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 26),
+          constraints: const BoxConstraints(minWidth: 72),
           decoration: BoxDecoration(
             // transparent fill to emphasize glass; no inner shine overlays
             gradient: const LinearGradient(
@@ -265,11 +266,11 @@ class GlassCircle extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                tint.withValues(alpha: 0.35),
-                tint.withValues(alpha: 0.20),
+                tint.withValues(alpha: 0.60),
+                tint.withValues(alpha: 0.40),
               ],
             ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.28), width: 1.2),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.38), width: 1.4),
             boxShadow: const [
               // Symmetric highlight/shadow for a perfect circular 3D look
               BoxShadow(color: Color(0x33FFFFFF), offset: Offset(-3, -3), blurRadius: 14, spreadRadius: 1),
