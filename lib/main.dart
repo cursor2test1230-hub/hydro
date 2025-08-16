@@ -76,28 +76,21 @@ class _RootScaffoldState extends State<RootScaffold> {
         elevation: 0,
         child: SizedBox(
           height: 64,
-          child: Stack(
-            fit: StackFit.expand,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Glass background fills and is clipped to the notched shape
-              const _GlassBarBackground(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  NavPillButton(
-                    icon: Icons.home,
-                    selected: _selectedIndex == 0,
-                    onTap: () => setState(() => _selectedIndex = 0),
-                    tooltip: 'Home',
-                  ),
-                  const SizedBox(width: 24),
-                  NavPillButton(
-                    icon: Icons.bar_chart,
-                    selected: _selectedIndex == 2,
-                    onTap: () => setState(() => _selectedIndex = 2),
-                    tooltip: 'Insights',
-                  ),
-                ],
+              NavPillButton(
+                icon: Icons.home,
+                selected: _selectedIndex == 0,
+                onTap: () => setState(() => _selectedIndex = 0),
+                tooltip: 'Home',
+              ),
+              const SizedBox(width: 24),
+              NavPillButton(
+                icon: Icons.bar_chart,
+                selected: _selectedIndex == 2,
+                onTap: () => setState(() => _selectedIndex = 2),
+                tooltip: 'Insights',
               ),
             ],
           ),
@@ -107,41 +100,7 @@ class _RootScaffoldState extends State<RootScaffold> {
   }
 }
 
-class _GlassBarBackground extends StatelessWidget {
-  const _GlassBarBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                scheme.surface.withValues(alpha: 0.35),
-                scheme.surface.withValues(alpha: 0.20),
-              ],
-            ),
-            border: Border(
-              top: BorderSide(color: Colors.white.withValues(alpha: 0.20), width: 1),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.20),
-                blurRadius: 20,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+// removed glass bar background to make the bottom navigation fully transparent
 
 class NavPillButton extends StatefulWidget {
   final IconData icon;
@@ -211,13 +170,11 @@ class GlassPill extends StatelessWidget {
           height: 44,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            // make background transparent to emphasize glass look
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                tint.withValues(alpha: 0.18),
-                tint.withValues(alpha: 0.10),
-              ],
+              colors: [Colors.transparent, Colors.transparent],
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
             boxShadow: [
@@ -256,7 +213,7 @@ class GlassPill extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [Colors.white.withValues(alpha: 0.6), Colors.transparent],
+                          colors: [Colors.white.withValues(alpha: 0.55), Colors.transparent],
                           stops: const [0.0, 0.6],
                         ),
                       ),
