@@ -62,18 +62,43 @@ class _RootScaffoldState extends State<RootScaffold> {
           hoverElevation: 18,
           highlightElevation: 18,
           onPressed: () => setState(() => _selectedIndex = 1),
-          child: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
               ),
-            ),
-            child: const Center(
-              child: Icon(Icons.eco, size: 32),
-            ),
+              // Gloss arc on top half
+              Positioned(
+                top: 6,
+                left: 6,
+                right: 6,
+                child: Container(
+                  height: 26,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(26),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.28),
+                        Colors.white.withValues(alpha: 0.05),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+              const Icon(Icons.eco, size: 32),
+            ],
           ),
         ),
       ),
@@ -153,6 +178,14 @@ class _NavPillButtonState extends State<NavPillButton> {
         color: Colors.black.withValues(alpha: selected ? 0.28 : 0.12),
         offset: _pressed ? const Offset(2, 3) : const Offset(3, 4),
         blurRadius: _pressed ? (selected ? 10 : 8) : (selected ? 14 : 10),
+        spreadRadius: 1,
+      ),
+      // Soft outer highlight to sell glossy edge
+      BoxShadow(
+        color: Colors.white.withValues(alpha: 0.08),
+        offset: const Offset(-1, -1),
+        blurRadius: 10,
+        spreadRadius: 0.5,
       ),
     ];
 
@@ -176,6 +209,29 @@ class _NavPillButtonState extends State<NavPillButton> {
         boxShadow: shadows,
       ),
       child: Icon(widget.icon, color: iconColor, size: 24),
+    );
+
+    // Persistent gloss layer at the top edge
+    final double glossOpacity = selected ? 0.18 : 0.10;
+    final Widget gloss = IgnorePointer(
+      child: Opacity(
+        opacity: glossOpacity,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xB3FFFFFF), // ~0.7
+                Color(0x14FFFFFF), // ~0.08
+                Colors.transparent,
+              ],
+              stops: [0.0, 0.42, 1.0],
+            ),
+          ),
+        ),
+      ),
     );
 
     // Subtle inner highlight to mimic specular reflection on press
@@ -205,7 +261,8 @@ class _NavPillButtonState extends State<NavPillButton> {
         alignment: Alignment.center,
         children: [
           base,
-          Positioned.fill(child: IgnorePointer(child: innerHighlight)),
+          Positioned.fill(child: gloss),
+          Positioned.fill(child: innerHighlight),
         ],
       ),
     );
