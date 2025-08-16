@@ -901,7 +901,7 @@ class PlantsPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.eco, color: Colors.white, size: 48),
+              GlossyIcon(icon: Icons.eco, size: 48, color: Colors.white),
               const SizedBox(height: 10),
               Text('Your plants overview', style: GoogleFonts.inter(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
               Text('Coming soon', style: GoogleFonts.inter(color: Colors.white.withValues(alpha: 0.9))),
