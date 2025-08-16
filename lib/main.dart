@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -55,50 +56,14 @@ class _RootScaffoldState extends State<RootScaffold> {
         child: FloatingActionButton(
           heroTag: 'fab-plants',
           shape: const CircleBorder(),
-          backgroundColor: const Color(0xFF57CC99),
-          foregroundColor: Colors.white,
-          elevation: 14,
-          focusElevation: 18,
-          hoverElevation: 18,
-          highlightElevation: 18,
+          backgroundColor: Colors.transparent,
+          splashColor: scheme.primary.withValues(alpha: 0.25),
+          elevation: 12,
+          highlightElevation: 16,
           onPressed: () => setState(() => _selectedIndex = 1),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
-              // Gloss arc on top half
-              Positioned(
-                top: 6,
-                left: 6,
-                right: 6,
-                child: Container(
-                  height: 26,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.28),
-                        Colors.white.withValues(alpha: 0.05),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
-                    ),
-                  ),
-                ),
-              ),
-              const Icon(Icons.eco, size: 32),
-            ],
+          child: GlassCircle(
+            tint: const Color(0xFF57CC99),
+            child: const Icon(Icons.eco, size: 32, color: Colors.white),
           ),
         ),
       ),
@@ -106,28 +71,69 @@ class _RootScaffoldState extends State<RootScaffold> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        color: scheme.surfaceContainerHigh,
-        elevation: 12,
-        surfaceTintColor: Colors.transparent,
         clipBehavior: Clip.antiAlias,
+        color: Colors.transparent,
+        elevation: 0,
         child: SizedBox(
           height: 64,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              NavPillButton(
-                icon: Icons.home,
-                selected: _selectedIndex == 0,
-                onTap: () => setState(() => _selectedIndex = 0),
-                tooltip: 'Home',
+              // Glass background fills and is clipped to the notched shape
+              const _GlassBarBackground(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  NavPillButton(
+                    icon: Icons.home,
+                    selected: _selectedIndex == 0,
+                    onTap: () => setState(() => _selectedIndex = 0),
+                    tooltip: 'Home',
+                  ),
+                  const SizedBox(width: 24),
+                  NavPillButton(
+                    icon: Icons.bar_chart,
+                    selected: _selectedIndex == 2,
+                    onTap: () => setState(() => _selectedIndex = 2),
+                    tooltip: 'Insights',
+                  ),
+                ],
               ),
-              const SizedBox(width: 24),
-              NavPillButton(
-                icon: Icons.bar_chart,
-                selected: _selectedIndex == 2,
-                onTap: () => setState(() => _selectedIndex = 2),
-                tooltip: 'Insights',
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GlassBarBackground extends StatelessWidget {
+  const _GlassBarBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                scheme.surface.withValues(alpha: 0.35),
+                scheme.surface.withValues(alpha: 0.20),
+              ],
+            ),
+            border: Border(
+              top: BorderSide(color: Colors.white.withValues(alpha: 0.20), width: 1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.20),
+                blurRadius: 20,
+                offset: const Offset(0, -2),
               ),
             ],
           ),
@@ -162,109 +168,12 @@ class _NavPillButtonState extends State<NavPillButton> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final bool selected = widget.selected;
-    final Color backgroundColor = selected
-        ? scheme.primaryContainer
-        : scheme.surfaceContainerHighest;
-    final Color borderColor = selected ? Colors.transparent : scheme.outlineVariant;
-    final Color iconColor = selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant;
+    final Color tint = selected ? scheme.primary : scheme.onSurface;
 
-    final List<BoxShadow> shadows = [
-      BoxShadow(
-        color: Colors.white.withValues(alpha: selected ? 0.45 : 0.18),
-        offset: const Offset(-2, -2),
-        blurRadius: _pressed ? (selected ? 6 : 4) : (selected ? 8 : 6),
-      ),
-      BoxShadow(
-        color: Colors.black.withValues(alpha: selected ? 0.28 : 0.12),
-        offset: _pressed ? const Offset(2, 3) : const Offset(3, 4),
-        blurRadius: _pressed ? (selected ? 10 : 8) : (selected ? 14 : 10),
-        spreadRadius: 1,
-      ),
-      // Soft outer highlight to sell glossy edge
-      BoxShadow(
-        color: Colors.white.withValues(alpha: 0.08),
-        offset: const Offset(-1, -1),
-        blurRadius: 10,
-        spreadRadius: 0.5,
-      ),
-    ];
-
-    Widget base = Container(
-      height: 44,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        gradient: selected
-            ? LinearGradient(
-                colors: [
-                  scheme.primaryContainer.withValues(alpha: 1),
-                  scheme.primaryContainer.withValues(alpha: 0.9),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        color: selected ? null : backgroundColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
-        boxShadow: shadows,
-      ),
-      child: Icon(widget.icon, color: iconColor, size: 24),
-    );
-
-    // Persistent gloss layer at the top edge
-    final double glossOpacity = selected ? 0.18 : 0.10;
-    final Widget gloss = IgnorePointer(
-      child: Opacity(
-        opacity: glossOpacity,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xB3FFFFFF), // ~0.7
-                Color(0x14FFFFFF), // ~0.08
-                Colors.transparent,
-              ],
-              stops: [0.0, 0.42, 1.0],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    // Subtle inner highlight to mimic specular reflection on press
-    final Widget innerHighlight = AnimatedOpacity(
-      opacity: _pressed ? 0.16 : 0.0,
-      duration: const Duration(milliseconds: 90),
-      curve: Curves.easeOut,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.7),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.6],
-          ),
-        ),
-      ),
-    );
-
-    Widget content = ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          base,
-          Positioned.fill(child: gloss),
-          Positioned.fill(child: innerHighlight),
-        ],
-      ),
+    Widget content = GlassPill(
+      tint: tint,
+      pressed: _pressed,
+      child: Icon(widget.icon, color: Colors.white, size: 24),
     );
 
     content = Material(
@@ -282,6 +191,146 @@ class _NavPillButtonState extends State<NavPillButton> {
     }
 
     return content;
+  }
+}
+
+class GlassPill extends StatelessWidget {
+  final Color tint;
+  final Widget child;
+  final bool pressed;
+
+  const GlassPill({super.key, required this.tint, required this.child, this.pressed = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        child: Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                tint.withValues(alpha: 0.18),
+                tint.withValues(alpha: 0.10),
+              ],
+            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
+            boxShadow: [
+              BoxShadow(color: Colors.white.withValues(alpha: 0.12), offset: const Offset(-2, -2), blurRadius: 8),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.18), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              child,
+              // Persistent top gloss
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0x33FFFFFF), Color(0x14FFFFFF), Colors.transparent],
+                        stops: [0.0, 0.45, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Quick specular burst on press
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: AnimatedOpacity(
+                    opacity: pressed ? 0.16 : 0.0,
+                    duration: const Duration(milliseconds: 90),
+                    curve: Curves.easeOut,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.white.withValues(alpha: 0.6), Colors.transparent],
+                          stops: const [0.0, 0.6],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GlassCircle extends StatelessWidget {
+  final Color tint;
+  final Widget child;
+
+  const GlassCircle({super.key, required this.tint, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                tint.withValues(alpha: 0.28),
+                tint.withValues(alpha: 0.18),
+              ],
+            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.28), width: 1.2),
+            boxShadow: const [
+              BoxShadow(color: Color(0x1FFFFFFF), offset: Offset(-2, -2), blurRadius: 10),
+              BoxShadow(color: Color(0x33000000), offset: Offset(4, 6), blurRadius: 18),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Top gloss arc
+              Positioned(
+                top: 8,
+                left: 10,
+                right: 10,
+                child: Container(
+                  height: 26,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(26),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.35),
+                        Colors.white.withValues(alpha: 0.06),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+              child,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
