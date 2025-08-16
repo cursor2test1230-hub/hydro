@@ -225,7 +225,7 @@ class GlassPill extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
         child: Container(
           height: 44,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             // transparent fill to emphasize glass; no inner shine overlays
             gradient: const LinearGradient(
@@ -271,8 +271,9 @@ class GlassCircle extends StatelessWidget {
             ),
             border: Border.all(color: Colors.white.withValues(alpha: 0.28), width: 1.2),
             boxShadow: const [
-              BoxShadow(color: Color(0x1FFFFFFF), offset: Offset(-2, -2), blurRadius: 10),
-              BoxShadow(color: Color(0x33000000), offset: Offset(4, 6), blurRadius: 18),
+              // Symmetric highlight/shadow for a perfect circular 3D look
+              BoxShadow(color: Color(0x33FFFFFF), offset: Offset(-3, -3), blurRadius: 14, spreadRadius: 1),
+              BoxShadow(color: Color(0x33000000), offset: Offset(6, 6), blurRadius: 20, spreadRadius: 2),
             ],
           ),
           child: Stack(
