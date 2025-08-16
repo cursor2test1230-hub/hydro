@@ -49,30 +49,33 @@ class _RootScaffoldState extends State<RootScaffold> {
         index: _selectedIndex,
         children: _pages,
       ),
-      floatingActionButton: SizedBox(
-        width: 72,
-        height: 72,
-        child: FloatingActionButton(
-          heroTag: 'fab-plants',
-          shape: const CircleBorder(),
-          backgroundColor: const Color(0xFF57CC99),
-          foregroundColor: Colors.white,
-          elevation: 14,
-          focusElevation: 18,
-          hoverElevation: 18,
-          highlightElevation: 18,
-          onPressed: () => setState(() => _selectedIndex = 1),
-          child: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+      floatingActionButton: PressScale(
+        pressedScale: 0.94,
+        child: SizedBox(
+          width: 72,
+          height: 72,
+          child: FloatingActionButton(
+            heroTag: 'fab-plants',
+            shape: const CircleBorder(),
+            backgroundColor: const Color(0xFF57CC99),
+            foregroundColor: Colors.white,
+            elevation: 14,
+            focusElevation: 18,
+            hoverElevation: 18,
+            highlightElevation: 18,
+            onPressed: () => setState(() => _selectedIndex = 1),
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [Color(0xFF62D8A2), Color(0xFF3FB58A)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
-            ),
-            child: const Center(
-              child: Icon(Icons.eco, size: 32),
+              child: const Center(
+                child: Icon(Icons.eco, size: 32),
+              ),
             ),
           ),
         ),
@@ -112,7 +115,7 @@ class _RootScaffoldState extends State<RootScaffold> {
   }
 }
 
-class NavPillButton extends StatelessWidget {
+class NavPillButton extends StatefulWidget {
   final IconData icon;
   final bool selected;
   final VoidCallback onTap;
@@ -127,8 +130,16 @@ class NavPillButton extends StatelessWidget {
   });
 
   @override
+  State<NavPillButton> createState() => _NavPillButtonState();
+}
+
+class _NavPillButtonState extends State<NavPillButton> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
+    final bool selected = widget.selected;
     final Color backgroundColor = selected
         ? scheme.primaryContainer
         : scheme.surfaceContainerHighest;
@@ -139,16 +150,18 @@ class NavPillButton extends StatelessWidget {
       BoxShadow(
         color: Colors.white.withValues(alpha: selected ? 0.45 : 0.18),
         offset: const Offset(-2, -2),
-        blurRadius: selected ? 8 : 6,
+        blurRadius: _pressed ? (selected ? 6 : 4) : (selected ? 8 : 6),
       ),
       BoxShadow(
         color: Colors.black.withValues(alpha: selected ? 0.28 : 0.12),
-        offset: const Offset(3, 4),
-        blurRadius: selected ? 14 : 10,
+        offset: _pressed ? const Offset(2, 3) : const Offset(3, 4),
+        blurRadius: _pressed ? (selected ? 10 : 8) : (selected ? 14 : 10),
       ),
     ];
 
-    Widget content = Container(
+    Widget content = AnimatedContainer(
+      duration: const Duration(milliseconds: 160),
+      curve: Curves.easeOut,
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -167,23 +180,68 @@ class NavPillButton extends StatelessWidget {
         border: Border.all(color: borderColor),
         boxShadow: shadows,
       ),
-      child: Icon(icon, color: iconColor, size: 24),
+      child: Icon(widget.icon, color: iconColor, size: 24),
     );
 
     content = Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
+        onHighlightChanged: (v) => setState(() => _pressed = v),
+        onTap: widget.onTap,
         child: content,
       ),
     );
 
-    if (tooltip != null) {
-      content = Tooltip(message: tooltip!, child: content);
+    if (widget.tooltip != null) {
+      content = Tooltip(message: widget.tooltip!, child: content);
     }
 
-    return content;
+    return AnimatedSlide(
+      offset: selected ? const Offset(0, -0.02) : Offset.zero,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      child: AnimatedScale(
+        scale: _pressed ? 0.96 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: content,
+      ),
+    );
+  }
+}
+
+class PressScale extends StatefulWidget {
+  final Widget child;
+  final double pressedScale;
+  final Duration duration;
+
+  const PressScale({super.key, required this.child, this.pressedScale = 0.95, this.duration = const Duration(milliseconds: 140)});
+
+  @override
+  State<PressScale> createState() => _PressScaleState();
+}
+
+class _PressScaleState extends State<PressScale> {
+  bool _pressed = false;
+
+  void _setPressed(bool v) {
+    if (_pressed != v) setState(() => _pressed = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (_) => _setPressed(true),
+      onPointerUp: (_) => _setPressed(false),
+      onPointerCancel: (_) => _setPressed(false),
+      child: AnimatedScale(
+        scale: _pressed ? widget.pressedScale : 1.0,
+        duration: widget.duration,
+        curve: Curves.easeOut,
+        child: widget.child,
+      ),
+    );
   }
 }
 
