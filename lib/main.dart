@@ -123,10 +123,43 @@ class _RootScaffoldState extends State<RootScaffold> {
                           onTap: () => setState(() => _selectedIndex = 0),
                           child: Container(
                             height: 64,
-                            child: Icon(
-                              Icons.home,
-                              color: Colors.grey[800],
-                              size: 24,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    const Color(0xFF3B82F6).withValues(alpha: 0.9), // Blue
+                                    const Color(0xFF1D4ED8).withValues(alpha: 0.8),
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: RadialGradient(
+                                    center: Alignment.topLeft,
+                                    radius: 0.7,
+                                    colors: [
+                                      Colors.white.withValues(alpha: 0.3),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.home,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -139,10 +172,43 @@ class _RootScaffoldState extends State<RootScaffold> {
                           onTap: () => setState(() => _selectedIndex = 2),
                           child: Container(
                             height: 64,
-                            child: Icon(
-                              Icons.bar_chart,
-                              color: Colors.grey[800],
-                              size: 24,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    const Color(0xFF8B5CF6).withValues(alpha: 0.9), // Purple
+                                    const Color(0xFF7C3AED).withValues(alpha: 0.8),
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: RadialGradient(
+                                    center: Alignment.topLeft,
+                                    radius: 0.7,
+                                    colors: [
+                                      Colors.white.withValues(alpha: 0.3),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.bar_chart,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
                             ),
                           ),
                         ),
