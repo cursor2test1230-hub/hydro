@@ -111,38 +111,38 @@ class _RootScaffoldState extends State<RootScaffold> {
               left: 20,
               right: 20,
               child: CustomPaint(
-                painter: NotchedNavigationPainter(),
+                painter: GlassMorphismNotchedPainter(),
                 child: Container(
                   height: 64,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // Left icon - Home
+                      // Left icon - Home with glass morphism
                       Expanded(
                         child: GestureDetector(
                           onTap: () => setState(() => _selectedIndex = 0),
                           child: Container(
                             height: 64,
-                            child: Icon(
-                              Icons.home,
-                              color: _selectedIndex == 0 ? const Color(0xFF4ADE80) : Colors.grey[600],
-                              size: 24,
+                            child: GlassMorphismIcon(
+                              icon: Icons.home,
+                              isSelected: _selectedIndex == 0,
+                              selectedColor: const Color(0xFF4ADE80),
                             ),
                           ),
                         ),
                       ),
                       // Center space for CTA button
                       const SizedBox(width: 60),
-                      // Right icon - Bar Chart
+                      // Right icon - Bar Chart with glass morphism
                       Expanded(
                         child: GestureDetector(
                           onTap: () => setState(() => _selectedIndex = 2),
                           child: Container(
                             height: 64,
-                            child: Icon(
-                              Icons.bar_chart,
-                              color: _selectedIndex == 2 ? const Color(0xFF4ADE80) : Colors.grey[600],
-                              size: 24,
+                            child: GlassMorphismIcon(
+                              icon: Icons.bar_chart,
+                              isSelected: _selectedIndex == 2,
+                              selectedColor: const Color(0xFF4ADE80),
                             ),
                           ),
                         ),
@@ -152,7 +152,7 @@ class _RootScaffoldState extends State<RootScaffold> {
                 ),
               ),
             ),
-            // Center CTA button with plant icon (elevated and overlapping)
+            // Enhanced 3D glass morphism CTA button with plant icon
             Positioned(
               bottom: 32,
               left: 0,
@@ -160,25 +160,9 @@ class _RootScaffoldState extends State<RootScaffold> {
               child: Center(
                 child: GestureDetector(
                   onTap: () => setState(() => _selectedIndex = 1),
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.eco,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                  child: GlassMorphismCTAButton(
+                    icon: Icons.eco,
+                    isSelected: _selectedIndex == 1,
                   ),
                 ),
               ),
@@ -881,4 +865,216 @@ class NotchedNavigationPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class GlassMorphismNotchedPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Create the main glass morphism effect
+    final Paint glassPaint = Paint()
+      ..shader = RadialGradient(
+        center: Alignment.topCenter,
+        radius: 1.5,
+        colors: [
+          Colors.white.withValues(alpha: 0.95),
+          Colors.white.withValues(alpha: 0.85),
+          Colors.white.withValues(alpha: 0.75),
+        ],
+        stops: const [0.0, 0.6, 1.0],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+
+    final Paint borderPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    final Path path = Path();
+    
+    // Start from bottom left with rounded corner
+    path.moveTo(0, size.height - 8);
+    path.quadraticBezierTo(0, size.height, 8, size.height);
+    
+    // Draw bottom line
+    path.lineTo(size.width - 8, size.height);
+    path.quadraticBezierTo(size.width, size.height, size.width, size.height - 8);
+    
+    // Draw right side curve
+    path.lineTo(size.width, 32);
+    path.quadraticBezierTo(size.width, 0, size.width - 32, 0);
+    
+    // Draw top line with enhanced notch
+    path.lineTo(size.width / 2 + 35, 0);
+    
+    // Draw enhanced notch (deeper concave curve)
+    path.quadraticBezierTo(size.width / 2, -12, size.width / 2 - 35, 0);
+    
+    // Draw left side curve
+    path.lineTo(32, 0);
+    path.quadraticBezierTo(0, 0, 0, 32);
+    
+    // Close the path
+    path.close();
+    
+    // Draw multiple shadow layers for depth
+    final Paint shadowPaint1 = Paint()
+      ..color = Colors.black.withValues(alpha: 0.08)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 25);
+    
+    final Paint shadowPaint2 = Paint()
+      ..color = Colors.black.withValues(alpha: 0.12)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 15);
+    
+    // Draw shadows
+    canvas.drawPath(path, shadowPaint1);
+    canvas.drawPath(path, shadowPaint2);
+    
+    // Draw main glass shape
+    canvas.drawPath(path, glassPaint);
+    
+    // Draw subtle border
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class GlassMorphismIcon extends StatelessWidget {
+  final IconData icon;
+  final bool isSelected;
+  final Color selectedColor;
+
+  const GlassMorphismIcon({
+    super.key,
+    required this.icon,
+    required this.isSelected,
+    required this.selectedColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isSelected 
+            ? [
+                selectedColor.withValues(alpha: 0.15),
+                selectedColor.withValues(alpha: 0.08),
+              ]
+            : [
+                Colors.white.withValues(alpha: 0.12),
+                Colors.white.withValues(alpha: 0.06),
+              ],
+        ),
+        border: Border.all(
+          color: isSelected 
+            ? selectedColor.withValues(alpha: 0.3)
+            : Colors.white.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isSelected 
+              ? selectedColor.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(-2, -2),
+          ),
+        ],
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Icon(
+          icon,
+          color: isSelected ? selectedColor : Colors.grey[700],
+          size: 24,
+        ),
+      ),
+    );
+  }
+}
+
+class GlassMorphismCTAButton extends StatelessWidget {
+  final IconData icon;
+  final bool isSelected;
+
+  const GlassMorphismCTAButton({
+    super.key,
+    required this.icon,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 68,
+      height: 68,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF8B5CF6).withValues(alpha: 0.95),
+            const Color(0xFF7C3AED).withValues(alpha: 0.9),
+            const Color(0xFF6D28D9).withValues(alpha: 0.85),
+          ],
+        ),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+            spreadRadius: 2,
+          ),
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.2),
+            blurRadius: 15,
+            offset: const Offset(-3, -3),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 25,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              center: Alignment.topLeft,
+              radius: 0.8,
+              colors: [
+                Colors.white.withValues(alpha: 0.3),
+                Colors.transparent,
+              ],
+            ),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 32,
+          ),
+        ),
+      ),
+    );
+  }
 }
