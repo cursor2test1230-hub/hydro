@@ -123,10 +123,10 @@ class _RootScaffoldState extends State<RootScaffold> {
                           onTap: () => setState(() => _selectedIndex = 0),
                           child: Container(
                             height: 64,
-                            child: GlassMorphismIcon(
-                              icon: Icons.home,
-                              isSelected: false,
-                              selectedColor: const Color(0xFF4ADE80),
+                            child: Icon(
+                              Icons.home,
+                              color: Colors.grey[800],
+                              size: 24,
                             ),
                           ),
                         ),
@@ -139,10 +139,10 @@ class _RootScaffoldState extends State<RootScaffold> {
                           onTap: () => setState(() => _selectedIndex = 2),
                           child: Container(
                             height: 64,
-                            child: GlassMorphismIcon(
-                              icon: Icons.bar_chart,
-                              isSelected: false,
-                              selectedColor: const Color(0xFF4ADE80),
+                            child: Icon(
+                              Icons.bar_chart,
+                              color: Colors.grey[800],
+                              size: 24,
                             ),
                           ),
                         ),
@@ -870,24 +870,25 @@ class NotchedNavigationPainter extends CustomPainter {
 class GlassMorphismNotchedPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // Create the main glass morphism effect without backdrop blur
+    // Create the main glass morphism effect with enhanced depth
     final Paint glassPaint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Colors.white.withValues(alpha: 0.95),
-          Colors.white.withValues(alpha: 0.88),
-          Colors.white.withValues(alpha: 0.80),
+          Colors.white.withValues(alpha: 0.98),
+          Colors.white.withValues(alpha: 0.92),
+          Colors.white.withValues(alpha: 0.85),
+          Colors.white.withValues(alpha: 0.78),
         ],
-        stops: const [0.0, 0.5, 1.0],
+        stops: const [0.0, 0.3, 0.7, 1.0],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.3)
+      ..color = Colors.white.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
+      ..strokeWidth = 2.0;
 
     final Path path = Path();
     
@@ -916,18 +917,23 @@ class GlassMorphismNotchedPainter extends CustomPainter {
     // Close the path
     path.close();
     
-    // Draw multiple shadow layers for depth
+    // Draw multiple shadow layers for enhanced depth
     final Paint shadowPaint1 = Paint()
-      ..color = Colors.black.withValues(alpha: 0.08)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 25);
+      ..color = Colors.black.withValues(alpha: 0.12)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30);
     
     final Paint shadowPaint2 = Paint()
-      ..color = Colors.black.withValues(alpha: 0.12)
+      ..color = Colors.black.withValues(alpha: 0.08)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
+    
+    final Paint shadowPaint3 = Paint()
+      ..color = Colors.black.withValues(alpha: 0.05)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 15);
     
-    // Draw shadows
+    // Draw shadows in order (farthest to closest)
     canvas.drawPath(path, shadowPaint1);
     canvas.drawPath(path, shadowPaint2);
+    canvas.drawPath(path, shadowPaint3);
     
     // Draw main glass shape
     canvas.drawPath(path, glassPaint);
@@ -935,98 +941,39 @@ class GlassMorphismNotchedPainter extends CustomPainter {
     // Draw subtle border
     canvas.drawPath(path, borderPaint);
     
-    // Add inner highlight for glass effect
-    final Paint highlightPaint = Paint()
+    // Add sophisticated inner highlights for premium glass effect
+    final Paint highlightPaint1 = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.center,
         colors: [
-          Colors.white.withValues(alpha: 0.4),
+          Colors.white.withValues(alpha: 0.5),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
     
-    canvas.drawPath(path, highlightPaint);
+    final Paint highlightPaint2 = Paint()
+      ..shader = RadialGradient(
+        center: Alignment.topCenter,
+        radius: 0.6,
+        colors: [
+          Colors.white.withValues(alpha: 0.3),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+    
+    // Draw highlights
+    canvas.drawPath(path, highlightPaint1);
+    canvas.drawPath(path, highlightPaint2);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class GlassMorphismIcon extends StatelessWidget {
-  final IconData icon;
-  final bool isSelected;
-  final Color selectedColor;
 
-  const GlassMorphismIcon({
-    super.key,
-    required this.icon,
-    required this.isSelected,
-    required this.selectedColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withValues(alpha: 0.25),
-            Colors.white.withValues(alpha: 0.15),
-            Colors.white.withValues(alpha: 0.08),
-          ],
-        ),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.4),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-            spreadRadius: 1,
-          ),
-          BoxShadow(
-            color: Colors.white.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(-3, -3),
-            spreadRadius: 1,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            center: Alignment.topLeft,
-            radius: 0.8,
-            colors: [
-              Colors.white.withValues(alpha: 0.4),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        child: Icon(
-          icon,
-          color: Colors.grey[800],
-          size: 24,
-        ),
-      ),
-    );
-  }
-}
 
 class GlassMorphismCTAButton extends StatelessWidget {
   final IconData icon;
