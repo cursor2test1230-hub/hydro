@@ -125,7 +125,7 @@ class _RootScaffoldState extends State<RootScaffold> {
                             height: 64,
                             child: GlassMorphismIcon(
                               icon: Icons.home,
-                              isSelected: _selectedIndex == 0,
+                              isSelected: false,
                               selectedColor: const Color(0xFF4ADE80),
                             ),
                           ),
@@ -141,7 +141,7 @@ class _RootScaffoldState extends State<RootScaffold> {
                             height: 64,
                             child: GlassMorphismIcon(
                               icon: Icons.bar_chart,
-                              isSelected: _selectedIndex == 2,
+                              isSelected: false,
                               selectedColor: const Color(0xFF4ADE80),
                             ),
                           ),
@@ -976,41 +976,53 @@ class GlassMorphismIcon extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isSelected 
-            ? [
-                selectedColor.withValues(alpha: 0.15),
-                selectedColor.withValues(alpha: 0.08),
-              ]
-            : [
-                Colors.white.withValues(alpha: 0.12),
-                Colors.white.withValues(alpha: 0.06),
-              ],
+          colors: [
+            Colors.white.withValues(alpha: 0.25),
+            Colors.white.withValues(alpha: 0.15),
+            Colors.white.withValues(alpha: 0.08),
+          ],
         ),
         border: Border.all(
-          color: isSelected 
-            ? selectedColor.withValues(alpha: 0.3)
-            : Colors.white.withValues(alpha: 0.2),
+          color: Colors.white.withValues(alpha: 0.4),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: isSelected 
-              ? selectedColor.withValues(alpha: 0.2)
-              : Colors.black.withValues(alpha: 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+            spreadRadius: 1,
           ),
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(-2, -2),
+            color: Colors.white.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(-3, -3),
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Icon(
-        icon,
-        color: isSelected ? selectedColor : Colors.grey[700],
-        size: 24,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            center: Alignment.topLeft,
+            radius: 0.8,
+            colors: [
+              Colors.white.withValues(alpha: 0.4),
+              Colors.transparent,
+            ],
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: Colors.grey[800],
+          size: 24,
+        ),
       ),
     );
   }
@@ -1037,9 +1049,9 @@ class GlassMorphismCTAButton extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF8B5CF6).withValues(alpha: 0.95),
-            const Color(0xFF7C3AED).withValues(alpha: 0.9),
-            const Color(0xFF6D28D9).withValues(alpha: 0.85),
+            const Color(0xFF4ADE80).withValues(alpha: 0.95), // Joyful green
+            const Color(0xFF22C55E).withValues(alpha: 0.9),  // Medium green
+            const Color(0xFF16A34A).withValues(alpha: 0.85), // Darker green
           ],
         ),
         border: Border.all(
@@ -1048,7 +1060,7 @@ class GlassMorphismCTAButton extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+            color: const Color(0xFF4ADE80).withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
             spreadRadius: 2,
