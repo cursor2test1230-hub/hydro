@@ -133,7 +133,7 @@ class _RootScaffoldState extends State<RootScaffold> {
             ),
             // Enhanced 3D glass morphism CTA button with plant icon
             Positioned(
-              bottom: 32,
+              bottom: 28,
               left: 0,
               right: 0,
               child: Center(
@@ -967,39 +967,52 @@ class GlassMorphismCTAButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 68,
-      height: 68,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF4ADE80).withValues(alpha: 0.95), // Joyful green
-            const Color(0xFF22C55E).withValues(alpha: 0.9),  // Medium green
-            const Color(0xFF16A34A).withValues(alpha: 0.85), // Darker green
+            const Color(0xFF4ADE80).withValues(alpha: 0.98), // Bright joyful green
+            const Color(0xFF22C55E).withValues(alpha: 0.95), // Medium green
+            const Color(0xFF16A34A).withValues(alpha: 0.90), // Darker green
+            const Color(0xFF15803D).withValues(alpha: 0.85), // Deepest green
           ],
         ),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.4),
-          width: 2,
+          color: Colors.white.withValues(alpha: 0.6),
+          width: 3,
         ),
         boxShadow: [
+          // Primary green glow
           BoxShadow(
-            color: const Color(0xFF4ADE80).withValues(alpha: 0.4),
+            color: const Color(0xFF4ADE80).withValues(alpha: 0.5),
+            blurRadius: 25,
+            offset: const Offset(0, 10),
+            spreadRadius: 3,
+          ),
+          // Secondary green glow
+          BoxShadow(
+            color: const Color(0xFF22C55E).withValues(alpha: 0.3),
+            blurRadius: 35,
+            offset: const Offset(0, 15),
+            spreadRadius: 5,
+          ),
+          // White highlight shadow
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.4),
             blurRadius: 20,
-            offset: const Offset(0, 8),
+            offset: const Offset(-4, -4),
             spreadRadius: 2,
           ),
+          // Deep shadow for depth
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.2),
-            blurRadius: 15,
-            offset: const Offset(-3, -3),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 25,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+            spreadRadius: 1,
           ),
         ],
       ),
@@ -1008,17 +1021,41 @@ class GlassMorphismCTAButton extends StatelessWidget {
           shape: BoxShape.circle,
           gradient: RadialGradient(
             center: Alignment.topLeft,
-            radius: 0.8,
+            radius: 0.7,
             colors: [
-              Colors.white.withValues(alpha: 0.3),
+              Colors.white.withValues(alpha: 0.5),
+              Colors.white.withValues(alpha: 0.2),
               Colors.transparent,
             ],
+            stops: const [0.0, 0.6, 1.0],
           ),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 32,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Main icon
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 36,
+            ),
+            // Subtle inner glow
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.8,
+                  colors: [
+                    const Color(0xFF4ADE80).withValues(alpha: 0.2),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
