@@ -101,13 +101,13 @@ class _RootScaffoldState extends State<RootScaffold> {
       ),
 
       bottomNavigationBar: Container(
-        height: 100,
+        height: 120,
         color: Colors.transparent,
         child: Stack(
           children: [
             // Left capsule tab - Home with glass morphism
             Positioned(
-              bottom: 20,
+              bottom: 25,
               left: 40,
               child: GestureDetector(
                 onTap: () => setState(() => _selectedIndex = 0),
@@ -120,7 +120,7 @@ class _RootScaffoldState extends State<RootScaffold> {
             ),
             // Right capsule tab - Bar Chart with glass morphism
             Positioned(
-              bottom: 20,
+              bottom: 25,
               right: 40,
               child: GestureDetector(
                 onTap: () => setState(() => _selectedIndex = 2),
@@ -133,7 +133,7 @@ class _RootScaffoldState extends State<RootScaffold> {
             ),
             // Enhanced 3D glass morphism CTA button with plant icon
             Positioned(
-              bottom: 28,
+              bottom: 35,
               left: 0,
               right: 0,
               child: Center(
