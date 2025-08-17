@@ -870,17 +870,17 @@ class NotchedNavigationPainter extends CustomPainter {
 class GlassMorphismNotchedPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // Create the main glass morphism effect
+    // Create the main glass morphism effect without backdrop blur
     final Paint glassPaint = Paint()
-      ..shader = RadialGradient(
-        center: Alignment.topCenter,
-        radius: 1.5,
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
         colors: [
           Colors.white.withValues(alpha: 0.95),
-          Colors.white.withValues(alpha: 0.85),
-          Colors.white.withValues(alpha: 0.75),
+          Colors.white.withValues(alpha: 0.88),
+          Colors.white.withValues(alpha: 0.80),
         ],
-        stops: const [0.0, 0.6, 1.0],
+        stops: const [0.0, 0.5, 1.0],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
@@ -934,6 +934,20 @@ class GlassMorphismNotchedPainter extends CustomPainter {
     
     // Draw subtle border
     canvas.drawPath(path, borderPaint);
+    
+    // Add inner highlight for glass effect
+    final Paint highlightPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.center,
+        colors: [
+          Colors.white.withValues(alpha: 0.4),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+    
+    canvas.drawPath(path, highlightPaint);
   }
 
   @override
@@ -993,13 +1007,10 @@ class GlassMorphismIcon extends StatelessWidget {
           ),
         ],
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Icon(
-          icon,
-          color: isSelected ? selectedColor : Colors.grey[700],
-          size: 24,
-        ),
+      child: Icon(
+        icon,
+        color: isSelected ? selectedColor : Colors.grey[700],
+        size: 24,
       ),
     );
   }
@@ -1054,25 +1065,22 @@ class GlassMorphismCTAButton extends StatelessWidget {
           ),
         ],
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              center: Alignment.topLeft,
-              radius: 0.8,
-              colors: [
-                Colors.white.withValues(alpha: 0.3),
-                Colors.transparent,
-              ],
-            ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            center: Alignment.topLeft,
+            radius: 0.8,
+            colors: [
+              Colors.white.withValues(alpha: 0.3),
+              Colors.transparent,
+            ],
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 32,
-          ),
+        ),
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: 32,
         ),
       ),
     );
