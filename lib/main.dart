@@ -50,10 +50,46 @@ class _RootScaffoldState extends State<RootScaffold> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Dark purple background to match the screenshot
+          // Richer green background with subtle glows
           Container(
             decoration: const BoxDecoration(
-              color: Color(0xFF1E1B4B),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFE9FFF4), Color(0xFFBFF3D8), Color(0xFF77D9AA)],
+                stops: [0.0, 0.5, 1.0],
+              ),
+            ),
+          ),
+          // Soft radial glows for depth (not animations)
+          Positioned(
+            top: -60,
+            left: -40,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [Colors.white.withValues(alpha: 0.22), Colors.transparent],
+                  stops: const [0.0, 1.0],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -80,
+            right: -60,
+            child: Container(
+              width: 260,
+              height: 260,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [const Color(0xFF57CC99).withValues(alpha: 0.24), Colors.transparent],
+                  stops: const [0.0, 1.0],
+                ),
+              ),
             ),
           ),
           
@@ -294,7 +330,6 @@ class _DashboardPageState extends State<DashboardPage> {
           'Hydro Monitor',
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
-            color: Colors.white,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -314,7 +349,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 12),
@@ -713,7 +747,7 @@ class PlantsPage extends StatelessWidget {
     return Scaffold(
        extendBodyBehindAppBar: true,
        appBar: AppBar(
-         title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.white)),
+         title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
          backgroundColor: Colors.transparent,
          surfaceTintColor: Colors.transparent,
          elevation: 0,
@@ -762,7 +796,7 @@ class InsightsPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.white)),
+        title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
