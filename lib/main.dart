@@ -50,48 +50,13 @@ class _RootScaffoldState extends State<RootScaffold> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Richer green background with subtle glows
+          // Dark purple background to match the screenshot
           Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFE9FFF4), Color(0xFFBFF3D8), Color(0xFF77D9AA)],
-                stops: [0.0, 0.5, 1.0],
-              ),
+              color: Color(0xFF1E1B4B),
             ),
           ),
-          // Soft radial glows for depth (not animations)
-          Positioned(
-            top: -60,
-            left: -40,
-            child: Container(
-              width: 220,
-              height: 220,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [Colors.white.withValues(alpha: 0.22), Colors.transparent],
-                  stops: const [0.0, 1.0],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -80,
-            right: -60,
-            child: Container(
-              width: 260,
-              height: 260,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [const Color(0xFF57CC99).withValues(alpha: 0.24), Colors.transparent],
-                  stops: const [0.0, 1.0],
-                ),
-              ),
-            ),
-          ),
+          
           IndexedStack(
             index: _selectedIndex,
             children: _pages,
@@ -99,178 +64,99 @@ class _RootScaffoldState extends State<RootScaffold> {
         ],
       ),
 
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        clipBehavior: Clip.antiAlias,
+      bottomNavigationBar: Container(
+        height: 100,
         color: Colors.transparent,
-        elevation: 0,
-        child: SizedBox(
-          height: 64,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              NavPillButton(
-                icon: Icons.home,
-                selected: _selectedIndex == 0,
-                onTap: () => setState(() => _selectedIndex = 0),
-                tooltip: 'Home',
+        child: Stack(
+          children: [
+            // Curved white bottom navigation bar with notch
+            Positioned(
+              bottom: 0,
+              left: 20,
+              right: 20,
+              child: CustomPaint(
+                painter: NotchedNavigationPainter(),
+                child: Container(
+                  height: 64,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Left icon - Home
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _selectedIndex = 0),
+                          child: Container(
+                            height: 64,
+                            child: Icon(
+                              Icons.home,
+                              color: _selectedIndex == 0 ? const Color(0xFF4ADE80) : Colors.grey[600],
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Center space for CTA button
+                      const SizedBox(width: 60),
+                      // Right icon - Bar Chart
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _selectedIndex = 2),
+                          child: Container(
+                            height: 64,
+                            child: Icon(
+                              Icons.bar_chart,
+                              color: _selectedIndex == 2 ? const Color(0xFF4ADE80) : Colors.grey[600],
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              NavPillButton(
-                icon: Icons.eco,
-                selected: _selectedIndex == 1,
-                onTap: () => setState(() => _selectedIndex = 1),
-                tooltip: 'Plants',
-              ),
-              NavPillButton(
-                icon: Icons.bar_chart,
-                selected: _selectedIndex == 2,
-                onTap: () => setState(() => _selectedIndex = 2),
-                tooltip: 'Insights',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// removed glass bar background to make the bottom navigation fully transparent
-
-class NavPillButton extends StatefulWidget {
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-  final String? tooltip;
-
-  const NavPillButton({
-    super.key,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-    this.tooltip,
-  });
-
-  @override
-  State<NavPillButton> createState() => _NavPillButtonState();
-}
-
-class _NavPillButtonState extends State<NavPillButton> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    final bool selected = widget.selected;
-    
-    // Custom tint color for plant icon when selected
-    Color tint;
-    if (widget.icon == Icons.eco && selected) {
-      tint = const Color(0xFF4ADE80); // Green color for plants
-    } else {
-      tint = selected ? scheme.primary : scheme.onSurface;
-    }
-
-    Widget content = GlassPill(
-      tint: tint,
-      pressed: _pressed,
-      child: Icon(widget.icon, size: 24, color: Colors.white),
-    );
-
-    content = Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onHighlightChanged: (v) => setState(() => _pressed = v),
-        onTap: widget.onTap,
-        child: content,
-      ),
-    );
-
-    if (widget.tooltip != null) {
-      content = Tooltip(message: widget.tooltip!, child: content);
-    }
-
-    return content;
-  }
-}
-
-class GlassPill extends StatelessWidget {
-  final Color tint;
-  final Widget child;
-  final bool pressed;
-
-  const GlassPill({super.key, required this.tint, required this.child, this.pressed = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-        child: Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          constraints: const BoxConstraints(minWidth: 72),
-          decoration: BoxDecoration(
-            // transparent fill to emphasize glass; no inner shine overlays
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.transparent, Colors.transparent],
             ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
-            boxShadow: [
-              BoxShadow(color: Colors.white.withValues(alpha: 0.10), offset: const Offset(-2, -2), blurRadius: 8),
-              BoxShadow(color: Colors.black.withValues(alpha: 0.20), offset: pressed ? const Offset(2, 3) : const Offset(3, 5), blurRadius: pressed ? 10 : 14),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class GlassCircle extends StatelessWidget {
-  final Color tint;
-  final Widget child;
-
-  const GlassCircle({super.key, required this.tint, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipOval(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            // Clean transparent fill like GlassPill for glossy effect
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.transparent, Colors.transparent],
-            ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
-            // Subtle shadow for depth
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+            // Center CTA button with plant icon (elevated and overlapping)
+            Positioned(
+              bottom: 32,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: () => setState(() => _selectedIndex = 1),
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF8B5CF6),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.eco,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: child,
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+
+
+
 
 class GlossyIcon extends StatelessWidget {
   final IconData icon;
@@ -408,6 +294,7 @@ class _DashboardPageState extends State<DashboardPage> {
           'Hydro Monitor',
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -427,6 +314,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 12),
@@ -825,7 +713,7 @@ class PlantsPage extends StatelessWidget {
     return Scaffold(
        extendBodyBehindAppBar: true,
        appBar: AppBar(
-         title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+         title: Text('Plants', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.white)),
          backgroundColor: Colors.transparent,
          surfaceTintColor: Colors.transparent,
          elevation: 0,
@@ -874,7 +762,7 @@ class InsightsPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        title: Text('Insights', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.white)),
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -912,4 +800,51 @@ class InsightsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class NotchedNavigationPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final Path path = Path();
+    
+    // Start from bottom left
+    path.moveTo(0, size.height);
+    
+    // Draw bottom line
+    path.lineTo(size.width, size.height);
+    
+    // Draw right side curve
+    path.lineTo(size.width, 32);
+    path.quadraticBezierTo(size.width, 0, size.width - 32, 0);
+    
+    // Draw top line with notch
+    path.lineTo(size.width / 2 + 30, 0);
+    
+    // Draw notch (concave curve)
+    path.quadraticBezierTo(size.width / 2, -8, size.width / 2 - 30, 0);
+    
+    // Draw left side curve
+    path.lineTo(32, 0);
+    path.quadraticBezierTo(0, 0, 0, 32);
+    
+    // Close the path
+    path.close();
+    
+    // Draw shadow
+    final Paint shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.1)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
+    
+    canvas.drawPath(path, shadowPaint);
+    
+    // Draw main shape
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
