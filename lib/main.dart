@@ -35,6 +35,7 @@ class RootScaffold extends StatefulWidget {
 
 class _RootScaffoldState extends State<RootScaffold> {
   int _selectedIndex = 0;
+  bool _isFirstTimeUser = true; // Track first-time user experience
 
   List<Widget> get _pages => const [
         DashboardPage(),
@@ -110,10 +111,15 @@ class _RootScaffoldState extends State<RootScaffold> {
               bottom: 25,
               left: 40,
               child: GestureDetector(
-                onTap: () => setState(() => _selectedIndex = 0),
+                onTap: () {
+                  setState(() {
+                    _selectedIndex = 0;
+                    _isFirstTimeUser = false; // User has interacted, no longer first-time
+                  });
+                },
                 child: CapsuleGlassMorphismTab(
                   icon: Icons.home,
-                  isSelected: _selectedIndex == 0,
+                  isSelected: _isFirstTimeUser ? false : _selectedIndex == 0,
                   selectedColor: const Color(0xFF4ADE80),
                 ),
               ),
@@ -123,10 +129,15 @@ class _RootScaffoldState extends State<RootScaffold> {
               bottom: 25,
               right: 40,
               child: GestureDetector(
-                onTap: () => setState(() => _selectedIndex = 2),
+                onTap: () {
+                  setState(() {
+                    _selectedIndex = 2;
+                    _isFirstTimeUser = false; // User has interacted, no longer first-time
+                  });
+                },
                 child: CapsuleGlassMorphismTab(
                   icon: Icons.bar_chart,
-                  isSelected: _selectedIndex == 2,
+                  isSelected: _isFirstTimeUser ? false : _selectedIndex == 2,
                   selectedColor: const Color(0xFF4ADE80),
                 ),
               ),
@@ -138,10 +149,15 @@ class _RootScaffoldState extends State<RootScaffold> {
               right: 0,
               child: Center(
                 child: GestureDetector(
-                  onTap: () => setState(() => _selectedIndex = 1),
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = 1;
+                      _isFirstTimeUser = false; // User has interacted, no longer first-time
+                    });
+                  },
                   child: GlassMorphismCTAButton(
                     icon: Icons.eco,
-                    isSelected: _selectedIndex == 1,
+                    isSelected: _isFirstTimeUser ? true : _selectedIndex == 1,
                   ),
                 ),
               ),
