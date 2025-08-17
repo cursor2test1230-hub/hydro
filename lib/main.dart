@@ -105,116 +105,29 @@ class _RootScaffoldState extends State<RootScaffold> {
         color: Colors.transparent,
         child: Stack(
           children: [
-            // Curved white bottom navigation bar with notch
+            // Left capsule tab - Home with glass morphism
             Positioned(
-              bottom: 0,
-              left: 20,
-              right: 20,
-              child: CustomPaint(
-                painter: GlassMorphismNotchedPainter(),
-                child: Container(
-                  height: 64,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Left icon - Home with glass morphism
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _selectedIndex = 0),
-                          child: Container(
-                            height: 64,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    const Color(0xFF3B82F6).withValues(alpha: 0.9), // Blue
-                                    const Color(0xFF1D4ED8).withValues(alpha: 0.8),
-                                  ],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: RadialGradient(
-                                    center: Alignment.topLeft,
-                                    radius: 0.7,
-                                    colors: [
-                                      Colors.white.withValues(alpha: 0.3),
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.home,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Center space for CTA button
-                      const SizedBox(width: 60),
-                      // Right icon - Bar Chart with glass morphism
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _selectedIndex = 2),
-                          child: Container(
-                            height: 64,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    const Color(0xFF8B5CF6).withValues(alpha: 0.9), // Purple
-                                    const Color(0xFF7C3AED).withValues(alpha: 0.8),
-                                  ],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: RadialGradient(
-                                    center: Alignment.topLeft,
-                                    radius: 0.7,
-                                    colors: [
-                                      Colors.white.withValues(alpha: 0.3),
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.bar_chart,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              bottom: 20,
+              left: 40,
+              child: GestureDetector(
+                onTap: () => setState(() => _selectedIndex = 0),
+                child: CapsuleGlassMorphismTab(
+                  icon: Icons.home,
+                  isSelected: _selectedIndex == 0,
+                  selectedColor: const Color(0xFF4ADE80),
+                ),
+              ),
+            ),
+            // Right capsule tab - Bar Chart with glass morphism
+            Positioned(
+              bottom: 20,
+              right: 40,
+              child: GestureDetector(
+                onTap: () => setState(() => _selectedIndex = 2),
+                child: CapsuleGlassMorphismTab(
+                  icon: Icons.bar_chart,
+                  isSelected: _selectedIndex == 2,
+                  selectedColor: const Color(0xFF4ADE80),
                 ),
               ),
             ),
@@ -1106,6 +1019,83 @@ class GlassMorphismCTAButton extends StatelessWidget {
           icon,
           color: Colors.white,
           size: 32,
+        ),
+      ),
+    );
+  }
+}
+
+class CapsuleGlassMorphismTab extends StatelessWidget {
+  final IconData icon;
+  final bool isSelected;
+  final Color selectedColor;
+
+  const CapsuleGlassMorphismTab({
+    super.key,
+    required this.icon,
+    required this.isSelected,
+    required this.selectedColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isSelected 
+            ? [
+                selectedColor.withValues(alpha: 0.95),
+                selectedColor.withValues(alpha: 0.85),
+              ]
+            : [
+                Colors.white.withValues(alpha: 0.95),
+                Colors.white.withValues(alpha: 0.85),
+              ],
+        ),
+        border: Border.all(
+          color: isSelected 
+            ? selectedColor.withValues(alpha: 0.4)
+            : Colors.white.withValues(alpha: 0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isSelected 
+              ? selectedColor.withValues(alpha: 0.3)
+              : Colors.black.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(-3, -3),
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          gradient: RadialGradient(
+            center: Alignment.topLeft,
+            radius: 0.8,
+            colors: [
+              Colors.white.withValues(alpha: 0.4),
+              Colors.transparent,
+            ],
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: isSelected ? Colors.white : Colors.grey[800],
+          size: 24,
         ),
       ),
     );
